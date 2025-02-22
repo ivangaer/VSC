@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Ingreso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form id="certificadoForm">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    <button type="button" onclick="generarCertificado()">Generar Certificado</button>
+  </form>
+
+  <div id="certificado" style="display: none; margin-top: 20px;">
+    <h2>Certificado de Aprobación</h2>
+    <p>Este documento certifica que</p>
+    <h1 id="nombreCertificado"></h1>
+    <p>Ha completado con éxito el curso de Desarrollador Fullstack</p>
+    <p>Felicidades por tus logros y dedicación.</p>
+    <p>Fecha: 25 de enero del 2025</p>
+  </div>
+
+  <script>
+    function generarCertificado() {
+      const nombre = document.getElementById('nombre').value;
+      document.getElementById('nombreCertificado').textContent = nombre;
+      document.getElementById('certificadoForm').style.display = 'none';
+      document.getElementById('certificado').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

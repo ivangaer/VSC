@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pelota Rebotando</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .ball {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff6b6b; /* Color de la pelota */
+            border-radius: 50%;
+            animation: bounce 2s infinite;
+            transform-origin: bottom center;
+        }
+
+        .shadow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 60%, rgba(0,0,0,0.4) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            50% {
+                transform: translateY(-20px);
+                opacity: 0.8;
+            }
+            
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .clicked {
+            animation: clickedBounce 0.5s ease-out;
+        }
+
+        @keyframes clickedBounce {
+            0% {
+                transform: translateY(0);
+            }
+            
+            100% {
+                transform: translateY(-50px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="shadow"></div>
+        <div class="ball" id="ball"></div>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        
+        // Animación básica de rebote
+        function bounceAnimation() {
+            let count = 0;
+            setInterval(() => {
+                count++;
+                ball.style.transform = `translateY(${Math.sin(count) * 50}px)`;
+            }, 100);
+        }
+
+        // Efecto al hacer click en la bola
+        ball.addEventListener('click', () => {
+            ball.classList.add('clicked');
+            setTimeout(() => {
+                ball.classList.remove('clicked');
+            }, 500);
+        });
+
+        bounceAnimation();
+    </script>
+</body>
+</html>

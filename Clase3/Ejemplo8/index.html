@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transición de Vista de Mario Bros</title>
+    <style>
+        /* Configuración básica del cuerpo */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Evita el scroll */
+        }
+
+        /* Contenedor principal */
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Estilos para las escenas */
+        .scene {
+            position: absolute;
+            inset: 0; /* Ocupa todo el contenedor */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1e1e1e; /* Fondo oscuro */
+            transition: transform 0.6s ease-in-out; /* Suavidad en la transición */
+        }
+
+        .scene img {
+            width: 80%;
+            max-width: 600px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+
+        /* Escena oculta */
+        .scene.hidden {
+            transform: scale(0.9) translateY(100%);
+        }
+
+        /* Escena visible */
+        .scene.showing {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Botón para cambiar de escena */
+        .button {
+            position: absolute;
+            bottom: 20px;
+            background: #ffcc00;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s; /* Cambia el color suavemente al pasar el mouse */
+        }
+
+        .button:hover {
+            background: #ffaa00;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Primera escena: Imagen de Mario -->
+    <div class="scene showing" id="scene1">
+        <img src="https://phantom-marca-mx.unidadeditorial.es/1363b390970cf90dbf030971b3ae047e/resize/1320/f/webp/mx/assets/multimedia/imagenes/2023/04/06/16808085794790.jpg" alt="Mario Bros">
+    </div>
+    <!-- Segunda escena: Mensaje de bienvenida -->
+    <div class="scene hidden" id="scene2">
+        <h1 style="color: white;">¡Bienvenido al mundo de Mario!</h1>
+    </div>
+    <!-- Botón para alternar entre escenas -->
+    <button class="button" id="toggleButton">Cambiar Escena</button>
+</div>
+
+<script>
+    // Seleccionamos el botón y las escenas
+    const button = document.getElementById('toggleButton');
+    const scene1 = document.getElementById('scene1');
+    const scene2 = document.getElementById('scene2');
+
+    // Añadimos un evento al botón para alternar las escenas
+    button.addEventListener('click', () => {
+        // Verificamos qué escena está visible
+        const isScene1Visible = scene1.classList.contains('showing');
+
+        if (isScene1Visible) {
+            // Ocultar escena 1 y mostrar escena 2
+            scene1.classList.remove('showing');
+            scene1.classList.add('hidden');
+
+            scene2.classList.remove('hidden');
+            scene2.classList.add('showing');
+        } else {
+            // Ocultar escena 2 y mostrar escena 1
+            scene2.classList.remove('showing');
+            scene2.classList.add('hidden');
+
+            scene1.classList.remove('hidden');
+            scene1.classList.add('showing');
+        }
+    });
+</script>
+
+</body>
+</html>

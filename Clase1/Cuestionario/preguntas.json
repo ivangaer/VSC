@@ -1,0 +1,65 @@
+[
+    {
+      "id": "q1",
+      "pregunta": "¿Qué etiqueta HTML se utiliza para insertar un salto de línea?",
+      "opciones": [
+        { "texto": "<br>", "correcta": true },
+        { "texto": "<hr>", "correcta": false },
+        { "texto": "<p>", "correcta": false }
+      ]
+    },
+    {
+      "id": "q2",
+      "pregunta": "¿Qué etiqueta HTML se utiliza para insertar una línea horizontal?",
+      "opciones": [
+        { "texto": "<hr>", "correcta": true },
+        { "texto": "<br>", "correcta": false },
+        { "texto": "<p>", "correcta": false }
+      ]
+    },
+    {
+      "id": "q3",
+      "pregunta": "¿Qué etiqueta HTML se utiliza para definir un párrafo?",
+      "opciones": [
+        { "texto": "<p>", "correcta": true },
+        { "texto": "<br>", "correcta": false },
+        { "texto": "<hr>", "correcta": false }
+      ]
+    },
+    {
+      "id": "q4",
+      "pregunta": "¿Qué etiquetas HTML se utilizan para definir títulos con diferentes niveles de importancia?",
+      "opciones": [
+        { "texto": "<h1> a <h6>", "correcta": true },
+        { "texto": "<title>", "correcta": false },
+        { "texto": "<header>", "correcta": false }
+      ]
+    },
+    {
+      "id": "q5",
+      "pregunta": "¿Qué etiqueta HTML se utiliza para resaltar texto en negrita?",
+      "opciones": [
+        { "texto": "<strong>", "correcta": true },
+        { "texto": "<em>", "correcta": false },
+        { "texto": "<mark>", "correcta": false }
+      ]
+    },
+    {
+      "id": "q6",
+      "pregunta": "¿Qué atributo de la etiqueta <a> se utiliza para definir un enlace?",
+      "opciones": [
+        { "texto": "href", "correcta": true },
+        { "texto": "src", "correcta": false },
+        { "texto": "link", "correcta": false }
+      ]
+    },
+    {
+      "id": "q7",
+      "pregunta": "¿Qué etiqueta HTML se utiliza para mostrar imágenes?",
+      "opciones": [
+        { "texto": "<img>", "correcta": true },
+        { "texto": "<picture>", "correcta": false },
+        { "texto": "<figure>", "correcta": false }
+      ]
+    }
+  ]

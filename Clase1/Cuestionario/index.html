@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de HTML5</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #e0f7fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            color: #00796b;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .question {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+        .question p {
+            font-weight: bold;
+            color: #00796b;
+        }
+        .question button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background-color: #00897b;
+            color: white;
+        }
+        .question button:hover {
+            background-color: #005f56;
+        }
+        .question button.correct {
+            background-color: #66bb6a;
+        }
+        .question button.wrong {
+            background-color: #ef5350;
+        }
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #00796b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cuestionario de HTML5</h1>
+
+    <div id="questions-container"></div>
+
+    <div id="result"></div>
+
+    <script>
+        let correctAnswers = 0;
+
+        function checkAnswer(questionId, button, isCorrect) {
+            const buttons = document.querySelectorAll(`#${questionId} button`);
+            buttons.forEach(btn => {
+                btn.disabled = true;
+            });
+
+            if (isCorrect) {
+                button.classList.add('correct');
+                correctAnswers++;
+            } else {
+                button.classList.add('wrong');
+            }
+
+            if (document.querySelectorAll('.question button:not([disabled])').length === 0) {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `Has respondido correctamente ${correctAnswers} preguntas.`;
+        }
+
+        function loadQuestions() {
+            fetch('preguntas.json')
+                .then(response => response.json())
+                .then(questions => {
+                    const container = document.getElementById('questions-container');
+                    questions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'question';
+                        questionDiv.id = question.id;
+
+                        const questionText = document.createElement('p');
+                        questionText.textContent = question.pregunta;
+                        questionDiv.appendChild(questionText);
+
+                        question.opciones.forEach(option => {
+                            const button = document.createElement('button');
+                            button.textContent = option.texto;
+                            button.onclick = () => checkAnswer(question.id, button, option.correcta);
+                            questionDiv.appendChild(button);
+                        });
+
+                        container.appendChild(questionDiv);
+                    });
+                })
+                .catch(error => console.error('Error al cargar las preguntas:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadQuestions);
+    </script>
+
+</body>
+</html>
