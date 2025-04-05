@@ -3,7 +3,7 @@ const context = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('score');
 
 const ROWS = 20; // Número de filas
-const COLS = 10; // Número de columnas
+const COLS = 15; // Número de columnas ampliadas
 const BLOCK_SIZE = 20; // Tamaño de cada bloque
 const DROP_INTERVAL = 1000; // Intervalo de caída en milisegundos
 
@@ -15,7 +15,12 @@ const TETROMINOS = [
     [[1, 1, 0], [0, 1, 1]], // Z
     [[1, 1, 1, 1]],         // I
     [[1, 1, 1], [1, 0, 0]], // L
-    [[1, 1, 1], [0, 0, 1]]  // J
+    [[1, 1, 1], [0, 0, 1]], // J
+    [[1, 1, 1], [0, 0, 0]], // U (New piece)
+    [[1, 1], [0, 1, 1]],    // V (New piece)
+    [[1, 1, 1], [0, 1, 0], [0, 1, 0]], // X (New piece)
+    [[1, 1, 1], [0, 0, 1], [0, 0, 1]], // New piece
+    [[1, 1, 1, 1], [1, 0, 0, 0]]       // New piece
 ];
 
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
