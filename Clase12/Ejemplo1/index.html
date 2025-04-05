@@ -1,0 +1,43 @@
+<canvas id="juegoCanvas" width="1280" height="1080"></canvas>
+<script>
+  // Obtener el canvas y su contexto de dibujo
+  const canvas = document.getElementById('juegoCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Posición inicial del cuadrado
+  let x = 50, y = 50;
+  const size = 50; // Tamaño del cuadrado
+  const speed = 5; // Velocidad de movimiento
+
+  // Objeto para almacenar el estado de las teclas
+  const keys = {};
+
+  // Detectar cuando se presiona una tecla
+  window.addEventListener('keydown', (e) => keys[e.code] = true);
+  // Detectar cuando se suelta una tecla
+  window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+  // Función para actualizar la posición del cuadrado
+  function update() {
+    if (keys['ArrowUp']) y -= speed;
+    if (keys['ArrowDown']) y += speed;
+    if (keys['ArrowLeft']) x -= speed;
+    if (keys['ArrowRight']) x += speed;
+  }
+
+  // Función para dibujar el cuadrado en el canvas
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar pantalla
+    ctx.fillStyle = 'green';
+    ctx.fillRect(x, y, size, size); // Dibujar el cuadrado
+  }
+
+  // Bucle del juego: actualiza y dibuja en cada fotograma
+  function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop); // Llamar al siguiente cuadro de animación
+  }
+
+  gameLoop(); // Iniciar el juego
+</script>
