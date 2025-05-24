@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atrapa las Estrellas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Evita el desplazamiento */
+        }
+
+        /* Contenedor del juego */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos del canvas */
+        canvas {
+            border: 3px solid #fff;
+            background-color: #000;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Overlay para mostrar puntuación y tiempo */
+        .overlay {
+            position: absolute;
+            top: 50px;
+            left: 200px;
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Pantalla de inicio */
+        .start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            color: white;
+        }
+
+        .start-screen h1 {
+            margin-bottom: 20px;
+        }
+
+        .start-screen button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-screen button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="overlay">
+            <div id="score">Puntuación: 0</div>
+            <div id="timer">Tiempo: 13</div>
+        </div>
+        <div id="startScreen" class="start-screen">
+            <h1>Atrapa las Estrellas</h1>
+            <p>Usa las flechas del teclado para moverte, recolecta estrellas y evitas los obstáculos.</p>
+            <button id="startButton">¡Jugar!</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuración del juego
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+
+        let gameActive = false;
+        let score = 0;
+        let timeLeft = 13;
+        let gameLoop;
+        let timerInterval;
+
+        // Jugador
+        const player = {
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 40,
+            speed: 5,
+            color: '#3498db'
+        };
+
+        // Controles
+        const keys = {
+            ArrowLeft: false,
+            ArrowRight: false,
+            ArrowUp: false,
+            ArrowDown: false
+        };
+
+        // Estrellas
+        let stars = [];
+
+        // Obstáculos
+        let obstacles = [];
+
+        // Partículas
+        let particles = [];
+
+        // Función para ajustar el tamaño del canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.7; // 90% del ancho de la ventana
+            canvas.height = window.innerHeight * 0.9; // 90% del alto de la ventana
+
+            // Reajustar la posición inicial del jugador
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - player.height - 10;
+        }
+
+        // Función para iniciar el juego
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameActive = true;
+            score = 0;
+            timeLeft = 13;
+            stars = [];
+            obstacles = [];
+            particles = [];
+            player.x = canvas.width / 2 - player.width / 2;
+            player.y = canvas.height - player.height - 10;
+            
+            // Generar estrellas iniciales
+            for (let i = 0; i < 5; i++) {
+                generateStar();
+            }
+            
+            // Generar obstáculos iniciales
+            for (let i = 0; i < 3; i++) {
+                generateObstacle();
+            }
+            
+            // Iniciar bucle del juego
+            gameLoop = requestAnimationFrame(update);
+            
+            // Iniciar temporizador
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Tiempo: ${timeLeft}`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Función para terminar el juego
+        function endGame() {
+            gameActive = false;
+            cancelAnimationFrame(gameLoop);
+            clearInterval(timerInterval);
+            
+            // Mostrar pantalla de inicio con resultados
+            startScreen.style.display = 'flex';
+            startButton.textContent = '¡Jugar de nuevo!';
+            document.querySelector('.start-screen h1').textContent = `¡Juego terminado! Puntuación: ${score}`;
+        }
+
+        // Función para generar una nueva estrella
+        function generateStar() {
+            stars.push({
+                x: Math.random() * (canvas.width - 30),
+                y: Math.random() * (canvas.height - 200),
+                size: 15 + Math.random() * 10,
+                color: `hsl(${Math.random() * 60 + 40}, 100%, 50%)`,
+                speedY: 1 + Math.random() * 2
+            });
+        }
+
+        // Función para generar un nuevo obstáculo
+        function generateObstacle() {
+            obstacles.push({
+                x: Math.random() * (canvas.width - 40),
+                y: -50,
+                width: 40 + Math.random() * 60,
+                height: 15 + Math.random() * 15,
+                color: 'darkred',
+                speedY: 2 + Math.random() * 3
+            });
+        }
+
+        // Función para crear partículas
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    size: 2 + Math.random() * 5,
+                    color: color,
+                    speedX: (Math.random() - 0.5) * 5,
+                    speedY: (Math.random() - 0.5) * 5,
+                    life: 30 + Math.random() * 20
+                });
+            }
+        }
+
+        // Función para dibujar una estrella
+        function drawStar(x, y, size, color) {
+            const spikes = 5;
+            const outerRadius = size;
+            const innerRadius = size / 2;
+            
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            
+            for (let i = 0; i < spikes * 2; i++) {
+                const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                const angle = (Math.PI / spikes) * i;
+                const sx = x + Math.cos(angle) * radius;
+                const sy = y + Math.sin(angle) * radius;
+                
+                if (i === 0) {
+                    ctx.moveTo(sx, sy);
+                } else {
+                    ctx.lineTo(sx, sy);
+                }
+            }
+            
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Función para actualizar el juego
+        function update() {
+            if (!gameActive) return;
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Actualizar posición del jugador
+            if (keys.ArrowLeft && player.x > 0) player.x -= player.speed;
+            if (keys.ArrowRight && player.x < canvas.width - player.width) player.x += player.speed;
+            if (keys.ArrowUp && player.y > 0) player.y -= player.speed;
+            if (keys.ArrowDown && player.y < canvas.height - player.height) player.y += player.speed;
+            
+            // Dibujar jugador
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Actualizar y dibujar estrellas
+            for (let i = stars.length - 1; i >= 0; i--) {
+                const star = stars[i];
+                star.y += star.speedY;
+                
+                // Dibujar estrella
+                drawStar(star.x + star.size/2, star.y + star.size/2, star.size/2, star.color);
+                
+                // Comprobar colisión con jugador
+                if (
+                    player.x < star.x + star.size &&
+                    player.x + player.width > star.x &&
+                    player.y < star.y + star.size &&
+                    player.y + player.height > star.y
+                ) {
+                    // Recolectar estrella
+                    stars.splice(i, 1);
+                    score += 10;
+                    scoreElement.textContent = `Puntuación: ${score}`;
+                    createParticles(star.x + star.size/2, star.y + star.size/2, star.color, 20);
+                    generateStar();
+                    
+                    // Generar obstáculo adicional cada 50 puntos
+                    if (score % 50 === 0) {
+                        generateObstacle();
+                    }
+                }
+                
+                // Eliminar estrellas que salen de la pantalla
+                if (star.y > canvas.height) {
+                    stars.splice(i, 1);
+                    generateStar();
+                }
+            }
+            
+            // Actualizar y dibujar obstáculos
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.y += obstacle.speedY;
+                
+                // Dibujar obstáculo
+                ctx.fillStyle = obstacle.color;
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                
+                // Comprobar colisión con jugador
+                if (
+                    player.x < obstacle.x + obstacle.width &&
+                    player.x + player.width > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.height > obstacle.y
+                ) {
+                    // Colisión con obstáculo
+                    score -= 5;
+                    if (score < 0) score = 0;
+                    scoreElement.textContent = `Puntuación: ${score}`;
+                    createParticles(obstacle.x + obstacle.width/2, obstacle.y + obstacle.height/2, '#ff0000', 15);
+                    obstacles.splice(i, 1);
+                    generateObstacle();
+                }
+                
+                // Eliminar obstáculos que salen de la pantalla
+                if (obstacle.y > canvas.height) {
+                    obstacles.splice(i, 1);
+                    generateObstacle();
+                }
+            }
+            
+            // Actualizar y dibujar partículas
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                particle.life--;
+                
+                // Dibujar partícula
+                ctx.fillStyle = particle.color;
+                ctx.globalAlpha = particle.life / 50;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                
+                // Eliminar partículas muertas
+                if (particle.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Dibujar fondo de estrellas
+            for (let i = 0; i < 100; i++) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5})`;
+                ctx.fillRect(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    1,
+                    1
+                );
+            }
+            
+            // Continuar bucle del juego
+            gameLoop = requestAnimationFrame(update);
+        }
+
+        // Event listeners para los controles
+        window.addEventListener('keydown', (e) => {
+            if (keys.hasOwnProperty(e.key)) {
+                keys[e.key] = true;
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (keys.hasOwnProperty(e.key)) {
+                keys[e.key] = false;
+                e.preventDefault();
+            }
+        });
+
+        // Iniciar el juego al hacer clic en el botón
+        startButton.addEventListener('click', startGame);
+
+        // Ajustar el tamaño del canvas al cargar y redimensionar la ventana
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>
