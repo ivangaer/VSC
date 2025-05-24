@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte con DataTables</title>
+  
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+  <!-- DataTables Buttons CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.1/css/buttons.dataTables.min.css">
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables Buttons JS -->
+  <script src="https://cdn.datatables.net/buttons/2.3.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.1/js/buttons.print.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Reporte de Empleados</h1>
+  <p>Este reporte muestra una lista de empleados con sus datos personales y laborales.</p>
+
+  <table id="employeeTable" class="display">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Departamento</th>
+        <th>Puesto</th>
+        <th>Fecha de Ingreso</th>
+        <th>Salario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Datos de empleados -->
+      <tr><td>1</td><td>Juan Pérez</td><td>30</td><td>Recursos Humanos</td><td>Gerente</td><td>2018-06-01</td><td>$50,000</td></tr>
+      <tr><td>2</td><td>María Gómez</td><td>28</td><td>Ventas</td><td>Ejecutiva</td><td>2020-03-15</td><td>$35,000</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    $(document).ready(function() {
+      $('#employeeTable').DataTable({
+        "paging": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "language": {
+          "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
+        },
+        dom: 'Bfrtip',
+        buttons: [
+          {
+            extend: 'excelHtml5',
+            text: 'Exportar a Excel',
+            className: 'btn btn-success'
+          },
+          {
+            extend: 'pdfHtml5',
+            text: 'Exportar a PDF',
+            className: 'btn btn-danger',
+            orientation: 'landscape',
+            pageSize: 'A4'
+          },
+          {
+            extend: 'print',
+            text: 'Imprimir',
+            className: 'btn btn-primary'
+          }
+        ]
+      });
+    });
+  </script>
+</body>
+</html>

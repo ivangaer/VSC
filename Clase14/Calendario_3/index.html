@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Interactivo Profesional</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        #calendar {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        /* Estilos personalizados para FullCalendar */
+        .fc .fc-toolbar-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        
+        .fc .fc-button {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            text-transform: capitalize;
+            transition: all 0.3s ease;
+        }
+        
+        .fc .fc-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: var(--secondary-color);
+        }
+        
+        .fc .fc-daygrid-day-number {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .fc .fc-daygrid-day.fc-day-today {
+            background-color: rgba(72, 149, 239, 0.1);
+        }
+        
+        .fc-event {
+            border-radius: 6px;
+            border: none;
+            padding: 4px 8px;
+            font-weight: 400;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .fc-event:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-container {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--secondary-color);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: var(--dark-color);
+            margin-right: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .fc .fc-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .fc .fc-toolbar-title {
+                margin: 10px 0;
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calendario Interactivo</h1>
+        <div id="calendar"></div>
+    </div>
+    
+    <!-- Modal para agregar/editar eventos -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Evento</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="eventForm">
+                <input type="hidden" id="eventId">
+                <div class="form-group">
+                    <label for="eventTitle">Título del Evento</label>
+                    <input type="text" class="form-control" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventStart">Fecha y Hora de Inicio</label>
+                    <input type="datetime-local" class="form-control" id="eventStart" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventEnd">Fecha y Hora de Fin</label>
+                    <input type="datetime-local" class="form-control" id="eventEnd">
+                </div>
+                <div class="form-group">
+                    <label for="eventColor">Color del Evento</label>
+                    <select class="form-control" id="eventColor">
+                        <option value="#4361ee">Azul</option>
+                        <option value="#4895ef">Azul Claro</option>
+                        <option value="#4cc9f0">Turquesa</option>
+                        <option value="#3a0ca3">Azul Oscuro</option>
+                        <option value="#f72585">Rosado</option>
+                        <option value="#7209b7">Morado</option>
+                        <option value="#38b000">Verde</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Descripción</label>
+                    <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelEvent">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="saveEvent">Guardar Evento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar el calendario
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'es',
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                },
+                firstDay: 1, // Lunes como primer día de la semana
+                navLinks: true, // Permite hacer clic en fechas para navegar
+                editable: true, // Permite arrastrar y modificar eventos
+                selectable: true, // Permite seleccionar rangos de tiempo
+                dayMaxEvents: true, // Muestra un enlace "más" cuando hay muchos eventos
+                nowIndicator: true, // Muestra un indicador de la hora actual
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5], // Lunes a viernes
+                    startTime: '08:00',
+                    endTime: '18:00'
+                },
+                eventDisplay: 'block', // Muestra los eventos como bloques
+                events: [
+                    // Eventos de ejemplo
+                    {
+                        id: '1',
+                        title: 'Reunión de equipo',
+                        start: new Date(),
+                        color: '#4361ee',
+                        description: 'Revisión de objetivos trimestrales'
+                    },
+                    {
+                        id: '2',
+                        title: 'Presentación cliente',
+                        start: new Date(new Date().setDate(new Date().getDate() + 2)),
+                        end: new Date(new Date().setDate(new Date().getDate() + 2)),
+                        color: '#f72585',
+                        description: 'Presentación del nuevo proyecto'
+                    }
+                ],
+                // Manejar clic en una fecha
+                dateClick: function(info) {
+                    openModal({
+                        start: info.dateStr,
+                        allDay: info.allDay
+                    });
+                },
+                // Manejar clic en un evento
+                eventClick: function(info) {
+                    openModal({
+                        id: info.event.id,
+                        title: info.event.title,
+                        start: info.event.start,
+                        end: info.event.end,
+                        color: info.event.backgroundColor,
+                        description: info.event.extendedProps.description
+                    });
+                },
+                // Manejar selección de rango de tiempo
+                select: function(info) {
+                    openModal({
+                        start: info.startStr,
+                        end: info.endStr,
+                        allDay: info.allDay
+                    });
+                }
+            });
+            
+            calendar.render();
+            
+            // Elementos del modal
+            const modal = document.getElementById('eventModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const eventForm = document.getElementById('eventForm');
+            const eventId = document.getElementById('eventId');
+            const eventTitle = document.getElementById('eventTitle');
+            const eventStart = document.getElementById('eventStart');
+            const eventEnd = document.getElementById('eventEnd');
+            const eventColor = document.getElementById('eventColor');
+            const eventDescription = document.getElementById('eventDescription');
+            const closeModal = document.getElementById('closeModal');
+            const cancelEvent = document.getElementById('cancelEvent');
+            
+            // Función para abrir el modal
+            function openModal(eventData = {}) {
+                if (eventData.id) {
+                    // Modo edición
+                    modalTitle.textContent = 'Editar Evento';
+                    eventId.value = eventData.id;
+                    eventTitle.value = eventData.title || '';
+                    eventColor.value = eventData.color || '#4361ee';
+                    eventDescription.value = eventData.description || '';
+                    
+                    // Formatear fechas para el input datetime-local
+                    const startDate = new Date(eventData.start);
+                    const endDate = eventData.end ? new Date(eventData.end) : null;
+                    
+                    eventStart.value = formatDateForInput(startDate);
+                    eventEnd.value = endDate ? formatDateForInput(endDate) : '';
+                } else {
+                    // Modo creación
+                    modalTitle.textContent = 'Nuevo Evento';
+                    eventId.value = '';
+                    eventTitle.value = '';
+                    eventColor.value = '#4361ee';
+                    eventDescription.value = '';
+                    
+                    // Establecer la fecha de inicio
+                    const startDate = eventData.start ? new Date(eventData.start) : new Date();
+                    eventStart.value = formatDateForInput(startDate);
+                    
+                    // Si hay fecha de fin, establecerla
+                    if (eventData.end) {
+                        const endDate = new Date(eventData.end);
+                        eventEnd.value = formatDateForInput(endDate);
+                    } else {
+                        eventEnd.value = '';
+                    }
+                }
+                
+                modal.classList.add('active');
+            }
+            
+            // Función para formatear fecha para input datetime-local
+            function formatDateForInput(date) {
+                return date.toISOString().slice(0, 16);
+            }
+            
+            // Función para cerrar el modal
+            function closeModalFunc() {
+                modal.classList.remove('active');
+                eventForm.reset();
+            }
+            
+            // Manejar envío del formulario
+            eventForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const eventData = {
+                    id: eventId.value || generateId(),
+                    title: eventTitle.value,
+                    start: eventStart.value,
+                    end: eventEnd.value || null,
+                    color: eventColor.value,
+                    description: eventDescription.value
+                };
+                
+                // Buscar si el evento ya existe
+                let existingEvent = calendar.getEventById(eventData.id);
+                
+                if (existingEvent) {
+                    // Actualizar evento existente
+                    existingEvent.setProp('title', eventData.title);
+                    existingEvent.setStart(eventData.start);
+                    existingEvent.setEnd(eventData.end);
+                    existingEvent.setProp('backgroundColor', eventData.color);
+                    existingEvent.setExtendedProp('description', eventData.description);
+                } else {
+                    // Agregar nuevo evento
+                    calendar.addEvent({
+                        id: eventData.id,
+                        title: eventData.title,
+                        start: eventData.start,
+                        end: eventData.end,
+                        backgroundColor: eventData.color,
+                        extendedProps: {
+                            description: eventData.description
+                        }
+                    });
+                }
+                
+                closeModalFunc();
+            });
+            
+            // Generar ID único para nuevos eventos
+            function generateId() {
+                return 'event-' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            // Manejar cierre del modal
+            closeModal.addEventListener('click', closeModalFunc);
+            cancelEvent.addEventListener('click', closeModalFunc);
+            
+            // Cerrar modal al hacer clic fuera del contenido
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModalFunc();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

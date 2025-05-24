@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Incluye la librería de Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    // Carga la librería de visualización y los paquetes de gráficos necesarios.
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Lenguaje', 'Popularidad'],
+        ['JavaScript', 90],
+        ['Python', 80],
+        ['Java', 75],
+        ['Ruby', 65],
+        ['C#', 70],
+        ['PHP', 60],
+        ['Swift', 55]
+      ]);
+
+      var options = {
+        chart: {
+          title: 'Popularidad de los lenguajes de programacion para fullstack',
+          subtitle: 'Basado en encuestas de desarrolladores',
+        }
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+      chart.draw(data, options);
+    }
+  </script>
+</head>
+<body>
+  <!-- Div donde se dibujará el gráfico -->
+  <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+</body>
+</html>

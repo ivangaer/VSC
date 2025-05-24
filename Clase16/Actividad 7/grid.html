@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Ventas de Productos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+  <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background-color: #f4f6f8;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .ag-theme-alpine {
+      height: 500px;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📊 Reporte de Ventas de Productos</h1>
+  <div id="salesGrid" class="ag-theme-alpine"></div>
+
+  <script>
+    const columnDefs = [
+      { headerName: "ID", field: "id", sortable: true, filter: true, width: 90 },
+      { headerName: "Producto", field: "producto", sortable: true, filter: true },
+      { headerName: "Categoría", field: "categoria", sortable: true, filter: true },
+      { headerName: "Cantidad", field: "cantidad", sortable: true, filter: true },
+      { headerName: "Precio Unitario (€)", field: "precio", sortable: true, filter: true },
+      {
+        headerName: "Total (€)",
+        valueGetter: p => (p.data.cantidad * p.data.precio).toFixed(2),
+        cellStyle: { fontWeight: 'bold', color: '#2e7d32' }
+      },
+      { headerName: "Fecha de Venta", field: "fecha", sortable: true, filter: 'agDateColumnFilter' }
+    ];
+
+    const rowData = [
+      { id: 1, producto: "Laptop Lenovo", categoria: "Electrónica", cantidad: 2, precio: 799.99, fecha: "2025-05-01" },
+      { id: 2, producto: "Mouse Logitech", categoria: "Accesorios", cantidad: 5, precio: 19.99, fecha: "2025-05-02" },
+      { id: 3, producto: "Silla Gamer", categoria: "Muebles", cantidad: 1, precio: 199.99, fecha: "2025-05-03" },
+      { id: 4, producto: "Monitor Samsung 24\"", categoria: "Electrónica", cantidad: 3, precio: 149.99, fecha: "2025-05-03" },
+      { id: 5, producto: "Teclado Mecánico", categoria: "Accesorios", cantidad: 4, precio: 89.99, fecha: "2025-05-04" },
+      { id: 6, producto: "Tablet Xiaomi", categoria: "Electrónica", cantidad: 2, precio: 299.99, fecha: "2025-05-05" },
+      { id: 7, producto: "Impresora HP", categoria: "Oficina", cantidad: 1, precio: 129.99, fecha: "2025-05-05" }
+    ];
+
+    const gridOptions = {
+      columnDefs,
+      rowData,
+      pagination: true,
+      paginationPageSize: 5,
+      domLayout: 'autoHeight',
+      animateRows: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+    // Correct initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    const gridDiv = document.querySelector('#salesGrid');
+    const gridApi = agGrid.createGrid(gridDiv, gridOptions);
+  });
+  </script>
+
+</body>
+</html>

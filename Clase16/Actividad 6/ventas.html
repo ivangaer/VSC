@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ventas por Año</title>
+    
+    <!-- Enlace a la hoja de estilo de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <!-- Enlace a la hoja de estilo de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Enlace a la librería de jQuery (requerido para DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Enlace a la librería de DataTables -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
+</head>
+<body>
+
+    <div style="padding: 20px;">
+        <h1>Reporte de Ventas por Año</h1>
+
+        <!-- Tabla de ventas con DataTables -->
+        <h2>Ventas por Año</h2>
+        <table id="ventasTable" class="display">
+            <thead>
+                <tr>
+                    <th>Año</th>
+                    <th>Ventas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2020</td>
+                    <td>15000</td>
+                </tr>
+                <tr>
+                    <td>2021</td>
+                    <td>20000</td>
+                </tr>
+                <tr>
+                    <td>2022</td>
+                    <td>25000</td>
+                </tr>
+                <tr>
+                    <td>2023</td>
+                    <td>30000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Gráfico de barras -->
+        <h2>Gráfico de Ventas por Año</h2>
+        <canvas id="ventasChart" width="400" height="200"></canvas>
+
+    </div>
+
+    <script>
+        // Inicializando DataTables
+        $(document).ready(function() {
+            $('#ventasTable').DataTable();
+        });
+
+        // Datos para el gráfico
+        const ctx = document.getElementById('ventasChart').getContext('2d');
+        const ventasChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023'], // Años
+                datasets: [{
+                    label: 'Ventas en USD',
+                    data: [15000, 20000, 25000, 30000], // Ventas por cada año
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

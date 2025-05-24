@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Personas con Handsontable</title>
+    <!-- Incluye el archivo CSS de Handsontable -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@13.0.0/dist/handsontable.full.min.css">
+
+    <!-- Agrega el CSS para la tabla -->
+    <style>
+        #example {
+            width: 100%;
+            height: 500px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Personas</h1>
+    <div id="example"></div>
+
+    <!-- Incluye el archivo JS de Handsontable -->
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@13.0.0/dist/handsontable.full.min.js"></script>
+
+    <script>
+        // Datos de ejemplo para la tabla
+        const data = [
+            [1, "Juan", "Pérez", 28, "Madrid"],
+            [2, "Ana", "Gómez", 32, "Barcelona"],
+            [3, "Carlos", "López", 45, "Valencia"],
+            [4, "Laura", "Martínez", 36, "Sevilla"],
+            [5, "Pedro", "Ramírez", 30, "Bilbao"]
+        ];
+
+        // Configuración de las columnas
+        const colHeaders = ['ID', 'Nombre', 'Apellido', 'Edad', 'Ciudad'];
+        const columns = [
+            {type: 'numeric'}, // ID (número)
+            {type: 'text'},    // Nombre (texto)
+            {type: 'text'},    // Apellido (texto)
+            {type: 'numeric'}, // Edad (número)
+            {type: 'text'}     // Ciudad (texto)
+        ];
+
+        // Crear la instancia de Handsontable
+        const container = document.getElementById('example');
+        const hot = new Handsontable(container, {
+            data: data,
+            colHeaders: colHeaders,
+            columns: columns,
+            rowHeaders: true,
+            stretchH: 'all',
+            width: '100%',
+            height: 400,
+            licenseKey: 'non-commercial-and-evaluation' // Clave de licencia para uso no comercial
+        });
+    </script>
+
+</body>
+</html>

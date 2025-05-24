@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura Clásica</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-top: 5px solid #4a6bff;
+        }
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+        .invoice-header h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 32px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .invoice-header p {
+            margin: 5px 0;
+            color: #7f8c8d;
+        }
+        .company-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4a6bff;
+            margin-bottom: 5px;
+        }
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .invoice-info div {
+            font-size: 14px;
+            color: #555;
+        }
+        .client-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6bff;
+        }
+        .invoice-details {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .invoice-table th {
+            background: linear-gradient(to right, #4a6bff, #6a5acd);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .invoice-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: left;
+            color: #555;
+        }
+        .invoice-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .invoice-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .invoice-total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #4CAF50;
+        }
+        .print-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .print-button button {
+            background: linear-gradient(to right, #4a6bff, #6a5acd);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .print-button button:hover {
+            background: linear-gradient(to right, #3a5bef, #5a4acd);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 107, 255, 0.4);
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            color: #95a5a6;
+            font-size: 12px;
+            border-top: 1px dashed #e0e0e0;
+            padding-top: 20px;
+        }
+        .highlight {
+            color: #4a6bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <!-- Encabezado de la factura -->
+    <div class="invoice-header">
+        <div class="company-name">TECNOLOGÍA AVANZADA S.A.</div>
+        <h1>FACTURA</h1>
+        <p>Calle Innovación 123, Parque Tecnológico, Madrid</p>
+        <p>Teléfono: 912 345 678 | Email: info@tecnologiaavanzada.com</p>
+        <p>CIF: B12345678 | Inscrita en el Registro Mercantil de Madrid</p>
+    </div>
+
+    <!-- Información de la factura -->
+    <div class="invoice-info">
+        <div class="client-info">
+            <strong>FACTURA A:</strong><br>
+            <span class="highlight">Juan Pérez López</span><br>
+            Calle Falsa 123, 3ºB<br>
+            28001 Madrid, España<br>
+            CIF/NIF: 12345678A
+        </div>
+        <div class="invoice-details">
+            <strong>FACTURA N°:</strong> <span class="highlight">2024-0001</span><br>
+            <strong>FECHA:</strong> 06/12/2024<br>
+            <strong>VENCIMIENTO:</strong> 13/12/2024<br>
+            <strong>FORMA DE PAGO:</strong> Transferencia bancaria
+        </div>
+    </div>
+
+    <!-- Tabla de detalles -->
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th width="5%">#</th>
+                <th width="45%">DESCRIPCIÓN</th>
+                <th width="15%">CANTIDAD</th>
+                <th width="15%">PRECIO UNITARIO</th>
+                <th width="20%">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Ordenador Portátil Pro - Modelo X200 (16GB RAM, 512GB SSD)</td>
+                <td>2</td>
+                <td>€850.00</td>
+                <td>€1,700.00</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Monitor Profesional 27" 4K</td>
+                <td>1</td>
+                <td>€320.00</td>
+                <td>€320.00</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Servicio de Instalación y Configuración</td>
+                <td>3</td>
+                <td>€50.00</td>
+                <td>€150.00</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Garantía Extendida 2 años</td>
+                <td>1</td>
+                <td>€120.00</td>
+                <td>€120.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Total -->
+    <div class="invoice-total">
+        SUBTOTAL: €2,290.00<br>
+        IVA (21%): €480.90<br>
+        <span style="font-size: 24px;">TOTAL: €2,770.90</span>
+    </div>
+
+    <!-- Notas -->
+    <div class="footer-note">
+        <p>Gracias por su confianza. Para cualquier consulta sobre esta factura, contacte con nuestro departamento de atención al cliente.</p>
+        <p>Cuenta bancaria: ES12 3456 7890 1234 5678 9012 | Banco Tecnológico</p>
+    </div>
+
+    <!-- Botón de impresión -->
+    <div class="print-button">
+        <button onclick="window.print()">Imprimir Factura</button>
+    </div>
+</div>
+
+</body>
+</html>
